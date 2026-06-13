@@ -3,8 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Joyeux Anniversaire !</title>
-    <!-- Police mignonne et arrondie -->
+    <title>Joyeux Anniversaire</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&display=swap" rel="stylesheet">
@@ -20,7 +19,7 @@
 
         body {
             font-family: 'Fredoka', sans-serif;
-            background-color: #0b0205; /* Fond sombre de la vidéo */
+            background-color: #0b0205;
             height: 100vh;
             overflow: hidden;
             display: flex;
@@ -29,7 +28,6 @@
             position: relative;
         }
 
-        /* Canvas pour la pluie digitale rose en arrière-plan */
         #matrix-canvas {
             position: absolute;
             top: 0;
@@ -39,7 +37,6 @@
             z-index: 1;
         }
 
-        /* Style des pages (PLUS DE CADRE AUTOUR, TOUT FLOTTE) */
         .page {
             display: none;
             flex-direction: column;
@@ -57,28 +54,25 @@
             display: flex;
         }
 
-        /* Textes blancs/lumineux pour contraster directement sur le fond */
+        /* Texte blanc pur, sans aucun effet néon */
         h1 {
             font-size: 2.5rem;
             color: #ffffff;
-            text-shadow: 0 0 10px #ff4b72, 0 0 20px #ff4b72;
             margin-bottom: 40px;
-            font-weight: 600;
+            font-weight: 500;
             max-width: 600px;
             line-height: 1.4;
         }
 
-        /* Boutons stylisés sans fond opaque lourd */
         .btn {
             font-family: 'Fredoka', sans-serif;
-            background-color: rgba(255, 255, 255, 0.9);
+            background-color: rgba(255, 255, 255, 0.95);
             border: 2px solid #ff4b72;
             padding: 14px 35px;
             font-size: 1.3rem;
             border-radius: 30px;
             cursor: pointer;
             color: #222;
-            box-shadow: 0 0 15px rgba(255, 75, 114, 0.4);
             transition: all 0.2s ease;
             font-weight: 600;
         }
@@ -86,7 +80,6 @@
         .btn:hover {
             background-color: #ff4b72;
             color: #fff;
-            box-shadow: 0 0 25px #ff4b72;
             transform: scale(1.05);
         }
 
@@ -105,62 +98,54 @@
             transition: all 0.12s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
 
-        /* --- STYLES MINI-JEU : LE CŒUR CLICQUABLE --- */
-        .game-heart {
-            font-size: 6rem;
-            cursor: pointer;
-            display: inline-block;
-            transition: transform 0.1s ease;
-            filter: drop-shadow(0 0 15px #ff4b72);
-            animation: pulse 1.5s infinite;
-            margin: 20px 0;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.08); }
-            100% { transform: scale(1); }
-        }
-
-        .progress-container {
-            width: 250px;
-            background-color: rgba(255, 255, 255, 0.2);
-            border: 2px solid #ff4b72;
-            height: 25px;
-            border-radius: 15px;
+        /* --- ZONE DE JEU : TICKET À GRATTER --- */
+        .scratch-container {
+            position: relative;
+            width: 320px;
+            height: 180px;
             margin-top: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            border-radius: 15px;
             overflow: hidden;
-            box-shadow: 0 0 10px rgba(255, 75, 114, 0.5);
+            border: 2px solid #ff4b72;
         }
 
-        .progress-bar {
+        /* Message secret caché dessous */
+        .scratch-secret {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
             height: 100%;
-            width: 0%;
-            background: linear-gradient(90deg, #ff85a2, #ff4b72);
-            transition: width 0.2s ease;
+            background-color: #221217;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: #ffffff;
+            padding: 10px;
         }
 
-        .counter-text {
-            color: #fff;
+        .scratch-secret p {
             font-size: 1.2rem;
-            margin-top: 10px;
-            text-shadow: 0 0 5px #ff4b72;
-        }
-
-        .live-comment {
-            color: #ff85a2;
-            font-size: 1.4rem;
-            height: 30px;
             margin-bottom: 15px;
             font-weight: 500;
-            text-shadow: 0 0 8px rgba(255, 133, 162, 0.6);
         }
 
-        /* --- STYLE PAGE GÂTEAU FINAL --- */
+        /* Toile de grattage au-dessus */
+        #scratch-canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            cursor: pointer;
+            z-index: 5;
+            touch-action: none;
+        }
+
+        /* --- STYLE FIN --- */
         .cake-icon {
             font-size: 7rem;
             cursor: pointer;
-            filter: drop-shadow(0 0 20px #ffb7b2);
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             margin-bottom: 20px;
         }
@@ -171,130 +156,59 @@
         .final-message {
             font-size: 1.8rem;
             color: #fff;
-            text-shadow: 0 0 10px #ff4b72, 0 0 20px #ff4b72;
             font-weight: 600;
             margin-top: 25px;
             max-width: 500px;
             animation: pop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
         }
 
-        /* Éléments d'explosions de clics */
-        .click-heart {
-            position: absolute;
-            color: #ff4b72;
-            pointer-events: none;
-            font-size: 20px;
-            animation: flyUp 0.8s ease-out forwards;
-            z-index: 10;
-        }
-
-        @keyframes flyUp {
-            0% { transform: translate(0, 0) scale(1); opacity: 1; }
-            100% { transform: translate(var(--x), var(--y)) scale(0); opacity: 0; }
+        @keyframes pop {
+            0% { transform: scale(0.3); opacity: 0; }
+            100% { transform: scale(1); opacity: 1; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Arrière-plan Matrix en Rose pur sans coupure -->
     <canvas id="matrix-canvas"></canvas>
 
     <!-- PAGE 1: Accueil -->
     <div id="page1" class="page active">
-        <h1>Joyeux 19ème Anniversaire ! 🎉</h1>
-        <button class="btn" onclick="nextPage(2)">Suivant :3</button>
+        <h1>Joyeux 19ème Anniversaire</h1>
+        <button class="btn" onclick="nextPage(2)">Suivant</button>
     </div>
 
-    <!-- PAGE 2: La question avec fuite -->
+    <!-- PAGE 2: La question personnalisée -->
     <div id="page2" class="page">
-        <h1>Est-ce que tu m'aimes de tout ton cœur ? 🥺</h1>
+        <h1>Est-ce que tu m'aimes Louis</h1>
         <div class="btn-group">
-            <button class="btn" id="btn-yes" onclick="nextPage(3)">Oui ! ❤️</button>
+            <button class="btn" id="btn-yes" onclick="nextPage(3); initScratch();">Oui</button>
             <button class="btn" id="btn-no" onmouseover="fuiteBouton()" onclick="fuiteBouton()" ontouchstart="fuiteBouton(event)">Non merci</button>
         </div>
     </div>
 
-    <!-- PAGE 3: LE NOUVEAU MINI-JEU INTERACTIF -->
+    <!-- PAGE 3: LE NOUVEAU TRUC INTERACTIF (TICKET À GRATTER) -->
     <div id="page3" class="page">
-        <h1>Prouve-le moi !<br>Mets toute ton énergie dans ce cœur !</h1>
-        <div class="live-comment" id="game-comment">Clique pour charger la jauge...</div>
-        <div class="game-heart" id="big-heart" onclick="clickHeart(event)">❤️</div>
-        <div class="progress-container">
-            <div class="progress-bar" id="love-bar"></div>
+        <h1>Gratte l'écran pour découvrir ton accès</h1>
+        <div class="scratch-container">
+            <div class="scratch-secret">
+                <p>Accès débloqué</p>
+                <button class="btn" onclick="nextPage(4)">Continuer</button>
+            </div>
+            <canvas id="scratch-canvas" width="320" height="180"></canvas>
         </div>
-        <div class="counter-text" id="counter-text">Niveau d'amour : 0%</div>
     </div>
 
     <!-- PAGE 4: Le Gâteau final -->
     <div id="page4" class="page">
-        <h1>Jauge chargée à 100% ! ✨</h1>
+        <h1>Clique sur le gâteau</h1>
         <div class="cake-icon" onclick="openGift()">🎂</div>
         <div id="gift-message" class="final-message" style="display: none;">
-            🎁 Tu as débloqué ta surprise ! Prépare-toi, j'ai hâte de fêter ça avec toi ! 🥰
+            Voici ton cadeau. Passe une excellente journée.
         </div>
     </div>
 
     <script>
-        // --- LOGIQUE MINI-JEU CLIC CŒUR ---
-        let loveScore = 0;
-        const comments = [
-            "Encore un peu ! 😘",
-            "Tu te débrouilles bien ! ❤️",
-            "Plus vite ! 🔥",
-            "Wow, tant d'amour ? 🥰",
-            "Presque au maximum ! 🚀",
-            "C'est débloqué ! 🎉"
-        ];
-
-        function clickHeart(event) {
-            if (loveScore >= 100) return;
-
-            loveScore += 10; // Augmente de 10% à chaque clic
-            if (loveScore > 100) loveScore = 100;
-
-            // Mises à jour visuelles
-            document.getElementById('love-bar').style.width = loveScore + '%';
-            document.getElementById('counter-text').innerText = "Niveau d'amour : " + loveScore + "%";
-            
-            // Commentaire qui change suivant la progression
-            const commentIndex = Math.min(Math.floor(loveScore / 20), comments.length - 1);
-            document.getElementById('game-comment').innerText = comments[commentIndex];
-
-            // Animation de rebond du gros cœur
-            const bigHeart = document.getElementById('big-heart');
-            bigHeart.style.transform = 'scale(1.3)';
-            setTimeout(() => bigHeart.style.transform = 'none', 100);
-
-            // Générer de petits cœurs volants à l'endroit du clic
-            for(let i=0; i<6; i++) {
-                spawnFlyingHeart(event.clientX, event.clientY);
-            }
-
-            // Quand c'est fini, on passe automatiquement à la page du gâteau
-            if (loveScore === 100) {
-                setTimeout(() => {
-                    nextPage(4);
-                }, 1000);
-            }
-        }
-
-        function spawnFlyingHeart(x, y) {
-            const h = document.createElement('div');
-            h.classList.add('click-heart');
-            h.innerHTML = '❤️';
-            h.style.left = x + 'px';
-            h.style.top = y + 'px';
-            
-            // Directions aléatoires d'explosion
-            const destX = (Math.random() - 0.5) * 200 + 'px';
-            const destY = -(Math.random() * 150 + 50) + 'px';
-            h.style.setProperty('--x', destX);
-            h.style.setProperty('--y', destY);
-
-            document.body.appendChild(h);
-            setTimeout(() => h.remove(), 800);
-        }
-
         // --- LOGIQUE DU BOUTON QUI S'ENFUIT ---
         function fuiteBouton(event) {
             if (event) event.preventDefault();
@@ -321,9 +235,51 @@
 
         function openGift() {
             document.getElementById('gift-message').style.display = 'block';
-            // On accélère la pluie Matrix pour fêter ça !
-            matrixIntervalSpeed = 20; 
-            restartMatrix();
+        }
+
+        // --- LOGIQUE DU JEU À GRATTER ---
+        function initScratch() {
+            const sCanvas = document.getElementById('scratch-canvas');
+            const sCtx = sCanvas.getContext('2d');
+            
+            // On remplit le canvas du dessus avec une couleur unie argentée/sombre à effacer
+            sCtx.fillStyle = '#4a3b40';
+            sCtx.fillRect(0, 0, sCanvas.width, sCanvas.height);
+            
+            // Petit texte indicatif sur la zone à gratter
+            sCtx.font = '16px Fredoka';
+            sCtx.fillStyle = '#ffffff';
+            sCtx.textAlign = 'center';
+            sCtx.fillText('Gratte ici avec ton doigt', sCanvas.width / 2, sCanvas.height / 2);
+
+            let isDrawing = false;
+
+            function scratch(e) {
+                if (!isDrawing) return;
+                
+                // Gérer souris ou tactile
+                const rect = sCanvas.getBoundingClientRect();
+                const clientX = e.touches ? e.touches[0].clientX : e.clientX;
+                const clientY = e.touches ? e.touches[0].clientY : e.clientY;
+                
+                const x = clientX - rect.left;
+                const y = clientY - rect.top;
+
+                // "Destination-out" permet de gommer le canvas du dessus
+                sCtx.globalCompositeOperation = 'destination-out';
+                sCtx.beginPath();
+                sCtx.arc(x, y, 25, 0, Math.PI * 2); // Taille du pinceau pour gratter
+                sCtx.fill();
+            }
+
+            sCanvas.addEventListener('mousedown', () => isDrawing = true);
+            sCanvas.addEventListener('touchstart', () => isDrawing = true);
+            
+            window.addEventListener('mouseup', () => isDrawing = false);
+            window.addEventListener('touchend', () => isDrawing = false);
+
+            sCanvas.addEventListener('mousemove', scratch);
+            sCanvas.addEventListener('touchmove', scratch);
         }
 
         // --- ARRIÈRE-PLAN MATRIX EN ROSE ---
@@ -361,9 +317,9 @@
                 const text = alphabet[Math.floor(Math.random() * alphabet.length)];
                 
                 if (Math.random() > 0.98) {
-                    ctx.fillStyle = '#ffffff'; // Tête lumineuse blanche
+                    ctx.fillStyle = '#ffffff';
                 } else {
-                    ctx.fillStyle = Math.random() > 0.5 ? '#ff4b72' : '#ff85a2'; // Dégradés de roses
+                    ctx.fillStyle = Math.random() > 0.5 ? '#ff4b72' : '#ff85a2';
                 }
 
                 ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
@@ -375,13 +331,7 @@
             }
         }
 
-        let matrixIntervalSpeed = 40;
-        let matrixId = setInterval(drawMatrix, matrixIntervalSpeed);
-
-        function restartMatrix() {
-            clearInterval(matrixId);
-            matrixId = setInterval(drawMatrix, matrixIntervalSpeed);
-        }
+        setInterval(drawMatrix, 40);
     </script>
 </body>
 </html>
