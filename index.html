@@ -17,24 +17,16 @@
             -webkit-user-select: none;
         }
 
+        /* Fond dégradé doux sur le thème de l'amour */
         body {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: #0b0205;
+            background: linear-gradient(135deg, #ffe5ec 0%, #ffc2d1 50%, #f9bec7 100%);
             height: 100vh;
             overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
             position: relative;
-        }
-
-        #matrix-canvas {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: 1;
         }
 
         /* Lecteur vidéo YouTube caché */
@@ -63,9 +55,10 @@
             display: flex;
         }
 
+        /* Texte en couleur sombre pour bien ressortir sur le fond clair */
         h1 {
             font-size: 2.6rem;
-            color: #ffffff;
+            color: #4a1525;
             margin-bottom: 40px;
             font-weight: 600;
             max-width: 600px;
@@ -74,35 +67,35 @@
         }
 
         .big-love {
-            font-size: 3.5rem;
-            color: #ffffff;
+            font-size: 3.8rem;
+            color: #ff4b72;
             font-weight: 700;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
             letter-spacing: -1px;
             animation: pop 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
         }
 
         .love-letter {
-            font-size: 1.25rem;
-            color: rgba(255, 255, 255, 0.9);
-            max-width: 500px;
+            font-size: 1.3rem;
+            color: #5c2233;
+            max-width: 520px;
             line-height: 1.6;
-            margin-bottom: 35px;
-            font-weight: 400;
+            font-weight: 500;
             animation: pop 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) both;
         }
 
         .btn {
             font-family: 'Plus Jakarta Sans', sans-serif;
-            background-color: rgba(255, 255, 255, 0.95);
+            background-color: #ffffff;
             border: 2px solid #ff4b72;
             padding: 14px 35px;
             font-size: 1.2rem;
             border-radius: 30px;
             cursor: pointer;
-            color: #222;
+            color: #ff4b72;
             transition: all 0.2s ease;
             font-weight: 600;
+            box-shadow: 0 4px 15px rgba(255, 75, 114, 0.15);
         }
 
         .btn:hover {
@@ -129,42 +122,40 @@
         /* --- BULLES À ÉCLATER --- */
         .bubble {
             position: absolute;
-            background: rgba(255, 133, 162, 0.2);
-            border: 2px solid rgba(255, 75, 114, 0.6);
+            background: rgba(255, 255, 255, 0.4);
+            border: 2px solid rgba(255, 75, 114, 0.5);
             border-radius: 50%;
             cursor: pointer;
             display: flex;
             justify-content: center;
             align-items: center;
-            animation: floatUp 4s linear infinite;
+            animation: floatUpGame 4s linear infinite;
             z-index: 5;
+            box-shadow: inset 0 0 10px rgba(255, 255, 255, 0.6);
         }
 
-        @keyframes floatUp {
-            0% { transform: translateY(105vh) scale(1); opacity: 0.8; }
+        @keyframes floatUpGame {
+            0% { transform: translateY(105vh) scale(1); opacity: 0.9; }
             100% { transform: translateY(-15vh) scale(1); opacity: 0; }
         }
 
-        /* --- STYLE CHAT FINAL --- */
-        .cat-icon {
-            font-size: 7rem;
-            cursor: pointer;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            margin-top: 10px;
-        }
-        .cat-icon:hover {
-            transform: scale(1.15) rotate(-5deg);
+        /* --- CŒURS EN ARRIÈRE-PLAN --- */
+        .bg-heart {
+            position: absolute;
+            color: rgba(255, 75, 114, 0.25);
+            pointer-events: none;
+            z-index: 1;
+            animation: floatBg infinite linear;
         }
 
-        .final-message {
-            font-size: 1.5rem;
-            color: #ff85a2;
-            font-weight: 600;
-            margin-top: 25px;
-            max-width: 500px;
-            animation: pop 0.5s ease-out;
+        @keyframes floatBg {
+            0% { transform: translateY(105vh) rotate(0deg); opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { transform: translateY(-15vh) rotate(360deg); opacity: 0; }
         }
 
+        /* Particules d'éclatement */
         .burst-particle {
             position: absolute;
             color: #ff4b72;
@@ -186,8 +177,6 @@
     </style>
 </head>
 <body>
-
-    <canvas id="matrix-canvas"></canvas>
 
     <!-- Conteneur pour l'API YouTube Player -->
     <div id="youtube-audio"></div>
@@ -212,24 +201,40 @@
         <h1 id="bubble-title">Éclate 5 bulles roses !</h1>
     </div>
 
-    <!-- PAGE 4: Le message d'amour + Le Chat -->
+    <!-- PAGE 4: Le message d'amour final direct -->
     <div id="page4" class="page">
         <div class="big-love">Je t'aime ❤️</div>
         <div class="love-letter">
             Merci d'être là à mes côtés chaque jour. J'ai un peu peur d'avoir du mal à trouver ton cadeau et je ne sais pas s'il va te plaire... mais j'espère de tout cœur qu'il te fera plaisir.
         </div>
-        
-        <div class="cat-icon" onclick="openGift()">🐱</div>
-        <div id="gift-message" class="final-message" style="display: none;">
-            Passe une excellente journée.
-        </div>
     </div>
 
     <script>
+        // --- CŒURS EN ARRIÈRE-PLAN ---
+        function createBackgroundHearts() {
+            const heartsContainer = document.body;
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.classList.add('bg-heart');
+                heart.innerHTML = Math.random() > 0.5 ? '❤️' : '💖';
+                
+                // Position et taille aléatoires
+                heart.style.left = Math.random() * 100 + 'vw';
+                const size = Math.random() * 20 + 15;
+                heart.style.fontSize = size + 'px';
+                
+                // Vitesse aléatoire
+                heart.style.animationDuration = (Math.random() * 4 + 6) + 's';
+                
+                heartsContainer.appendChild(heart);
+                setTimeout(() => heart.remove(), 10000);
+            }, 450);
+        }
+        createBackgroundHearts();
+
         // --- LOGIQUE INTÉGRATION MUSIQUE ---
         let player;
         
-        // Chargement asynchrone de l'API YouTube
         const tag = document.createElement('script');
         tag.src = "https://www.youtube.com/iframe_api";
         const firstScriptTag = document.getElementsByTagName('script')[0];
@@ -243,7 +248,7 @@
                 playerVars: {
                     'autoplay': 0,
                     'loop': 1,
-                    'playlist': 'oPhfAThtnQw', // Nécessaire pour faire boucler une seule vidéo
+                    'playlist': 'oPhfAThtnQw',
                     'controls': 0,
                     'showinfo': 0,
                     'modestbranding': 1
@@ -252,7 +257,6 @@
         }
 
         function startExperience() {
-            // Lance la musique dès le premier clic de l'utilisateur
             if (player && typeof player.playVideo === 'function') {
                 player.playVideo();
             }
@@ -281,10 +285,6 @@
                 page.classList.remove('active');
             });
             document.getElementById('page' + pageNumber).classList.add('active');
-        }
-
-        function openGift() {
-            document.getElementById('gift-message').style.display = 'block';
         }
 
         // --- JEU DES BULLES ---
@@ -347,57 +347,6 @@
                 setTimeout(() => p.remove(), 600);
             }
         }
-
-        // --- ARRIÈRE-PLAN MATRIX EN ROSE ---
-        const canvas = document.getElementById('matrix-canvas');
-        const ctx = canvas.getContext('2d');
-
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-        }
-        window.addEventListener('resize', resizeCanvas);
-        resizeCanvas();
-
-        const alphabet = "♥LOVE♥ELISE♥TOI♥ALWAYS♥LOVE♥".split("");
-        const fontSize = 16;
-        let columns = canvas.width / fontSize;
-        let rainDrops = [];
-
-        function initRain() {
-            columns = canvas.width / fontSize;
-            rainDrops = [];
-            for (let x = 0; x < columns; x++) {
-                rainDrops[x] = Math.random() * -100;
-            }
-        }
-        initRain();
-
-        function drawMatrix() {
-            ctx.fillStyle = 'rgba(11, 2, 5, 0.12)';
-            ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-            ctx.font = fontSize + 'px sans-serif';
-
-            for (let i = 0; i < rainDrops.length; i++) {
-                const text = alphabet[Math.floor(Math.random() * alphabet.length)];
-                
-                if (Math.random() > 0.98) {
-                    ctx.fillStyle = '#ffffff';
-                } else {
-                    ctx.fillStyle = Math.random() > 0.5 ? '#ff4b72' : '#ff85a2';
-                }
-
-                ctx.fillText(text, i * fontSize, rainDrops[i] * fontSize);
-
-                if (rainDrops[i] * fontSize > canvas.height && Math.random() > 0.975) {
-                    rainDrops[i] = 0;
-                }
-                rainDrops[i]++;
-            }
-        }
-
-        setInterval(drawMatrix, 40);
     </script>
 </body>
 </html>
