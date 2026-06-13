@@ -174,7 +174,7 @@
 
     <!-- PAGE 1: Accueil -->
     <div id="page1" class="page active">
-        <h1>Joyeux 19ème Anniversaire</h1>
+        <h1>Joyeux 17ème Anniversaire Élise</h1>
         <button class="btn" onclick="nextPage(2)">Suivant</button>
     </div>
 
@@ -187,7 +187,7 @@
         </div>
     </div>
 
-    <!-- PAGE 3: LE NOUVEAU TRUC INTERACTIF (TICKET À GRATTER) -->
+    <!-- PAGE 3: TRUC INTERACTIF (TICKET À GRATTER) -->
     <div id="page3" class="page">
         <h1>Gratte l'écran pour découvrir ton accès</h1>
         <div class="scratch-container">
@@ -242,11 +242,9 @@
             const sCanvas = document.getElementById('scratch-canvas');
             const sCtx = sCanvas.getContext('2d');
             
-            // On remplit le canvas du dessus avec une couleur unie argentée/sombre à effacer
             sCtx.fillStyle = '#4a3b40';
             sCtx.fillRect(0, 0, sCanvas.width, sCanvas.height);
             
-            // Petit texte indicatif sur la zone à gratter
             sCtx.font = '16px Fredoka';
             sCtx.fillStyle = '#ffffff';
             sCtx.textAlign = 'center';
@@ -257,7 +255,6 @@
             function scratch(e) {
                 if (!isDrawing) return;
                 
-                // Gérer souris ou tactile
                 const rect = sCanvas.getBoundingClientRect();
                 const clientX = e.touches ? e.touches[0].clientX : e.clientX;
                 const clientY = e.touches ? e.touches[0].clientY : e.clientY;
@@ -265,10 +262,9 @@
                 const x = clientX - rect.left;
                 const y = clientY - rect.top;
 
-                // "Destination-out" permet de gommer le canvas du dessus
                 sCtx.globalCompositeOperation = 'destination-out';
                 sCtx.beginPath();
-                sCtx.arc(x, y, 25, 0, Math.PI * 2); // Taille du pinceau pour gratter
+                sCtx.arc(x, y, 25, 0, Math.PI * 2);
                 sCtx.fill();
             }
 
@@ -293,7 +289,7 @@
         window.addEventListener('resize', resizeCanvas);
         resizeCanvas();
 
-        const alphabet = "♥LOVE19♥AYM♥TOI♥ALWAYS♥LOVE♥".split("");
+        const alphabet = "♥LOVE17♥ELISE♥TOI♥ALWAYS♥LOVE♥".split("");
         const fontSize = 16;
         let columns = canvas.width / fontSize;
         let rainDrops = [];
